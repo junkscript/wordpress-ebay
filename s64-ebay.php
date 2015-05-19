@@ -28,6 +28,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 /*************************************************************/
+/* INCLUDE EXTERNAL FUNCTIONS */
+/*************************************************************/
+
+include_once( plugin_dir_path( __FILE__ ) . 'ebay/functions.php');
+
+/*************************************************************/
 /* ADD SHORTCODE(S) */
 /*************************************************************/
 
@@ -49,8 +55,11 @@ function s64ebay_handler($atts)
 
 function s64ebay_function($atts) 
 {
+	// TEST EBAY CLASS
+	$test_paragraph = test_function();
+	
 	extract(shortcode_atts(array('width' => '', 'height' => '',), $atts ));
-  	return '<p>Width:"'. $width .'"</p><p>Height:"'. $height .'"</p>';
+  	return '<p>Width:"'. $width .'"</p><p>Height:"'. $height .'"</p>'. '<br /><br />' . $test_paragraph ;
 }
 
 
