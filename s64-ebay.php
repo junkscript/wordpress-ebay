@@ -28,13 +28,13 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 /*************************************************************/
-/* ADD SHORTCODE(S)											 */
+/* ADD SHORTCODE(S) */
 /*************************************************************/
 
 add_shortcode("s64-ebay", "s64ebay_handler");
 
 /*************************************************************/
-/* SHORTCODE HANDLER(S)										 */
+/* SHORTCODE HANDLER(S) */
 /*************************************************************/
 
 function s64ebay_handler($atts) 
@@ -44,7 +44,7 @@ function s64ebay_handler($atts)
 }
 
 /*************************************************************/
-/* SHORTCODE FUNCTION(S)									 */
+/* SHORTCODE FUNCTION(S) */
 /*************************************************************/
 
 function s64ebay_function($atts) 
