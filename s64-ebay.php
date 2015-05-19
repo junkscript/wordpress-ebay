@@ -33,6 +33,57 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 include_once( plugin_dir_path( __FILE__ ) . 'ebay/functions.php');
 
+
+/*************************************************************/
+/* ACTION FUNCTION(S) */
+/*************************************************************/
+
+add_action('admin_menu', 's64_ebay_setup_menu');
+add_action( 'admin_init', 'update_s64_ebay_affiliate_id' );
+
+/*************************************************************/
+/* PLUGIN SETTINGS PAGE */
+/*************************************************************/
+
+function update_s64_ebay_affiliate_id() 
+{
+	// REGISTER GROUP 
+  	register_setting( 's64-ebay-setting-1', 's64-ebay-affiliate-id' );
+}
+ 
+function s64_ebay_setup_menu()
+{
+	// ADD SETTINGS PAGE
+    add_menu_page( 'SUPER64 ebay plugin', '<span style="color:white">SUPER</span><span style="color:red;">64</span> - eBay Plugin', 'manage_options', 's64-ebay', 's64_settings_init' );
+}
+ 
+function s64_settings_init()
+{      
+	// CREATE SETTINGS PAGE HTML
+	// ONE FIELD (EBAY AFFILIATE ID)
+	// STORED IN WP-OPTIONS TO RETRIEVE LATER
+	// (SEE SHORTCODE FUNCTION )
+?>
+
+	<h1>SUPER64 - eBay Plugin Settings</h1>
+    <h2>Please make sure to enter all details for the plugin to work etc..</h2>
+    <form method="post" action="options.php">
+	    <?php settings_fields( 's64-ebay-setting-1' ); ?>
+	    <?php do_settings_sections( 's64-ebay-setting-1' ); ?>
+	    <table class="form-table">
+	      <tr valign="top">
+	      <th scope="row">eBay Affiliate ID:</th>
+	      <td><input type="text" name="s64-ebay-affiliate-id" value="<?php echo get_option( 's64-ebay-affiliate-id' ); ?>"/></td>
+	      </tr>
+	    </table>
+	    <?php submit_button(); ?>
+	</form>
+
+<?php
+}
+
+
+
 /*************************************************************/
 /* ADD SHORTCODE(S) */
 /*************************************************************/
@@ -55,21 +106,20 @@ function s64ebay_handler($atts)
 
 function s64ebay_function($atts) 
 {
-	// TEST EBAY CLASS
+	// TEST EXTERNAL PHP 
 	$test_paragraph = test_function();
-	
+
+	// GET SAVED OPTIONS FROM
+	// PLUGIN ADMIN AREA
+	$s64_ebay_id = get_option( 's64-ebay-affiliate-id' );
+
+	// SHORTCODE EXTRACTION
 	extract(shortcode_atts(array('width' => '', 'height' => '',), $atts ));
-  	return '<p>Width:"'. $width .'"</p><p>Height:"'. $height .'"</p>'. '<br /><br />' . $test_paragraph ;
+
+  	return '<p>Width:"'. $width .'"</p><p>Height:"'. $height .'"</p>' . 
+  	'<br /><br />'. $test_paragraph .'<br /><br />' . 
+  	'<p><strong>eBay Affiliate ID:</strong> ' .$s64_ebay_id. '</p>';
 }
-
-
-
-
-
-
-
-
-
 
 
 
