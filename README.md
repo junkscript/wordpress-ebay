@@ -5,6 +5,7 @@ Super 64 Ebay plugin (EXPLAIN MORE)
 ## Code Example
 
 Add a shortcode to your wordpress post:
+:::python
 	[s64-ebay width="100" height="100" items="4" max_price="100" min_price="10" bin="yes"]
 
 ## Motivation
