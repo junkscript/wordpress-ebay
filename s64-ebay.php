@@ -54,8 +54,9 @@ function update_s64_ebay_affiliate_id()
 function s64_ebay_setup_menu()
 {
 	// ADD SETTINGS PAGE
-    add_menu_page( 'SUPER64 ebay plugin', '<span style="color:white">SUPER</span><span style="color:red;">64</span> - eBay Plugin', 'manage_options', 's64-ebay', 's64_settings_init' );
-}
+    add_menu_page( 'SUPER64 ebay plugin', '<span style="color:white">SUPER</span><span style="color:red;">64</span> - eBay Plugin', 'manage_options', 's64-ebay', 's64_settings_init', plugin_dir_url( __FILE__ ) . 'images/ebay.png' );
+
+}	
  
 function s64_settings_init()
 {      
