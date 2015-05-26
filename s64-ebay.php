@@ -49,6 +49,8 @@ function update_s64_ebay_affiliate_id()
 {
 	// REGISTER GROUP 
   	register_setting( 's64-ebay-setting-1', 's64-ebay-affiliate-id' );
+  	register_setting( 's64-ebay-setting-1', 's64-ebay-api-key' );
+
 }
  
 function s64_ebay_setup_menu()
@@ -75,6 +77,8 @@ function s64_settings_init()
 	      <tr valign="top">
 	      <th scope="row">eBay Affiliate ID:</th>
 	      <td><input type="text" name="s64-ebay-affiliate-id" value="<?php echo get_option( 's64-ebay-affiliate-id' ); ?>"/></td>
+        <th scope="row">eBay API Key:</th>
+	      <td><input type="text" name="s64-ebay-api-key" value="<?php echo get_option( 's64-ebay-api-key' ); ?>"/></td>
 	      </tr>
 	    </table>
 	    <?php submit_button(); ?>
@@ -107,25 +111,66 @@ function s64ebay_handler($atts)
 
 function s64ebay_function($atts) 
 {
-	// TEST EXTERNAL PHP 
-	$test_paragraph = test_function();
 
-	// GET SAVED OPTIONS FROM
-	// PLUGIN ADMIN AREA
-	$s64_ebay_id = get_option( 's64-ebay-affiliate-id' );
+	// GET SAVED OPTIONS FROM PLUGIN ADMIN AREA
+	$publisher_id = get_option( 's64-ebay-affiliate-id' );
+  $api_key = get_option( 's64-ebay-api-key' );
 
 	// SHORTCODE EXTRACTION
-	extract(shortcode_atts(array('width' => '', 'height' => '',), $atts ));
+	extract(
+      shortcode_atts(
+        array(
+            'keywords' => get_the_title(), // Default to the title of the post
+            'alignment' => 'horizontal', // Default to 3 wide 1 high
+            'count' => '3', // Default to 3 wide 1 high
+            'listing_type',
+            'category',
+            'min_price',
+            'max_price',
+            'global_id'=>'EBAY-GB' // Default to ebay.co.uk
+        ),
+        $atts
+      )
+  );
 
-  	return '<p>Width:"'. $width .'"</p><p>Height:"'. $height .'"</p>' . 
-  	'<br /><br />'. $test_paragraph .'<br /><br />' . 
-  	'<p><strong>eBay Affiliate ID:</strong> ' .$s64_ebay_id. '</p>';
+  // DATA FROM EBAY
+  $debug = array(
+      'html' => '',
+
+      // from get_options
+      'publisher id' => $publisher_id,
+      'api key' => $api_key,
+
+      // from shortcode
+      'keywords' => $keywords,
+      'alignment' => $alignment,
+      'count' => $count,
+      'listing_type' => $listing_type,
+      'category' => $category,
+      'min price' => $min_price,
+      'max price' => $max_price,
+      'global id' => $global_id
+  );
+
+  try {
+    $ebay = searchEbay($publisher_id, $api_key, $keywords, $count, $listing_type, $category, $min_price, $max_price, $global_id, $alignment);
+    $debug['ebay_api_response'] = $ebay;
+
+    $json = json_decode($ebay, True);
+    if ($json['findItemsAdvancedResponse'][0]['ack'][0] == "Success")
+    {
+      foreach ($json['findItemsAdvancedResponse'][0]['searchResult'][0]['item'] as $r) {
+        $title = $r['title'][0];
+        $link = $r['viewItemURL'][0];
+        $img = $r['galleryURL'][0];
+        $price = $r['sellingStatus'][0]['currentPrice'][0]['__value__'];
+        $debug['html'] .= "<a href='$link'>$title <img src='$img' /> $price</a>";
+      }
+    }
+  }catch(Exception $ex) {
+    $debug['problem'] = $ex;
+  }
+
+  return $debug['html'] . '<hr><pre>' . print_r($debug, True) . '</pre>';
 }
 
-
-
-
-
-
-
-?>
