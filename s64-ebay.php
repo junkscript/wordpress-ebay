@@ -50,6 +50,7 @@ function update_s64_ebay_affiliate_id()
 	// REGISTER GROUP 
   	register_setting( 's64-ebay-setting-1', 's64-ebay-affiliate-id' );
   	register_setting( 's64-ebay-setting-1', 's64-ebay-api-key' );
+    register_setting( 's64-ebay-setting-1', 's64-ebay-custom-css' );
 
 }
  
@@ -77,9 +78,18 @@ function s64_settings_init()
 	      <tr valign="top">
 	      <th scope="row">eBay Affiliate ID:</th>
 	      <td><input type="text" name="s64-ebay-affiliate-id" value="<?php echo get_option( 's64-ebay-affiliate-id' ); ?>"/></td>
+        </tr>
+        <tr valign="top">
         <th scope="row">eBay API Key:</th>
 	      <td><input type="text" name="s64-ebay-api-key" value="<?php echo get_option( 's64-ebay-api-key' ); ?>"/></td>
-	      </tr>
+        </tr>
+        <tr valign="top">
+	      <th scope="row">Custom CSS:</th>
+        <td>
+          <textarea name="s64-ebay-custom-css" rows="10" cols="50"><?php echo get_option( 's64-ebay-custom-css' ); ?></textarea>
+        </td>
+        </tr>
+        </tr>
 	    </table>
 	    <?php submit_button(); ?>
 	</form>
@@ -115,6 +125,7 @@ function s64ebay_function($atts)
 	// GET SAVED OPTIONS FROM PLUGIN ADMIN AREA
 	$publisher_id = get_option( 's64-ebay-affiliate-id' );
   $api_key = get_option( 's64-ebay-api-key' );
+  $custom_css = get_option( 's64-ebay-custom-css' );
 
 	// SHORTCODE EXTRACTION
 	extract(
@@ -159,13 +170,18 @@ function s64ebay_function($atts)
     $json = json_decode($ebay, True);
     if ($json['findItemsAdvancedResponse'][0]['ack'][0] == "Success")
     {
+      $debug['html'] .= "<style>". $custom_css ."</style>";
+      $debug['html'] .= "<ul class='s64-ebay-slider'>";
+
       foreach ($json['findItemsAdvancedResponse'][0]['searchResult'][0]['item'] as $r) {
         $title = $r['title'][0];
         $link = $r['viewItemURL'][0];
         $img = $r['galleryURL'][0];
         $price = $r['sellingStatus'][0]['currentPrice'][0]['__value__'];
-        $debug['html'] .= "<a href='$link'>$title <img src='$img' /> $price</a>";
+        $debug['html'] .= "<li><a href='$link'>$title <img src='$img' /> $price</a></li>";
       }
+
+      $debug['html'] .= "</ul>";
     }
   }catch(Exception $ex) {
     $debug['problem'] = $ex;
