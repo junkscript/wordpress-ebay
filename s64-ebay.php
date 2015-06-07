@@ -64,7 +64,7 @@ function s64_ebay_setup_menu()
 function s64_settings_init()
 {      
 	// CREATE SETTINGS PAGE HTML
-	// ONE FIELD (EBAY AFFILIATE ID)
+	// FIELDS: AFFILIATE ID, API KEY, CSS
 	// STORED IN WP-OPTIONS TO RETRIEVE LATER
 	// (SEE SHORTCODE FUNCTION )
 ?>
@@ -119,74 +119,46 @@ function s64ebay_handler($atts)
 /* SHORTCODE FUNCTION(S) */
 /*************************************************************/
 
-function s64ebay_function($atts) 
+function s64ebay_function($atts)
 {
-
 	// GET SAVED OPTIONS FROM PLUGIN ADMIN AREA
 	$publisher_id = get_option( 's64-ebay-affiliate-id' );
   $api_key = get_option( 's64-ebay-api-key' );
   $custom_css = get_option( 's64-ebay-custom-css' );
 
 	// SHORTCODE EXTRACTION
-	extract(
-      shortcode_atts(
+	$shortcode = shortcode_atts(
         array(
-            'keywords' => get_the_title(), // Default to the title of the post
-            'alignment' => 'horizontal', // Default to 3 wide 1 high
-            'count' => '3', // Default to 3 wide 1 high
-            'listing_type',
-            'category',
-            'min_price',
-            'max_price',
-            'global_id'=>'EBAY-GB' // Default to ebay.co.uk
+          'global_id'=>'EBAY-GB', // Default to ebay.co.uk
+          'keywords' => get_the_title(), // Default to the title of the post
+          'count' => '3', // Default to 3 wide 1 high
+          'hide_title' => Null,
+          'categories' => Null,
+          'condition' => Null,
+          'exclude_category' => Null,
+          'exclude_seller' => Null,
+          'free_shipping' => Null,
+          'fixed_price' => Null,
+          'min_price' => Null,
+          'max_price' => Null,
+          'outlet_only' => Null,
+          'sellers' => Null
         ),
         $atts
-      )
-  );
+      );
 
-  // DATA FROM EBAY
-  $debug = array(
-      'html' => '',
-
-      // from get_options
-      'publisher id' => $publisher_id,
-      'api key' => $api_key,
-
-      // from shortcode
-      'keywords' => $keywords,
-      'alignment' => $alignment,
-      'count' => $count,
-      'listing_type' => $listing_type,
-      'category' => $category,
-      'min price' => $min_price,
-      'max price' => $max_price,
-      'global id' => $global_id
-  );
-
+  // Quit if there's a problem querying ebay.
   try {
-    $ebay = searchEbay($publisher_id, $api_key, $keywords, $count, $listing_type, $category, $min_price, $max_price, $global_id, $alignment);
-    $debug['ebay_api_response'] = $ebay;
-
-    $json = json_decode($ebay, True);
-    if ($json['findItemsAdvancedResponse'][0]['ack'][0] == "Success")
-    {
-      $debug['html'] .= "<style>". $custom_css ."</style>";
-      $debug['html'] .= "<ul class='s64-ebay-slider'>";
-
-      foreach ($json['findItemsAdvancedResponse'][0]['searchResult'][0]['item'] as $r) {
-        $title = $r['title'][0];
-        $link = $r['viewItemURL'][0];
-        $img = $r['galleryURL'][0];
-        $price = $r['sellingStatus'][0]['currentPrice'][0]['__value__'];
-        $debug['html'] .= "<li><a href='$link'>$title <img src='$img' /> $price</a></li>";
-      }
-
-      $debug['html'] .= "</ul>";
-    }
+    $query = findItemsAdvancedQuery($publisher_id, $api_key, $shortcode);
+    $ebay_response = searchEbay($query);
   }catch(Exception $ex) {
-    $debug['problem'] = $ex;
+    return Null; # TODO: Should we return Null or some HTML if there's a problem?
   }
 
-  return $debug['html'] . '<hr><pre>' . print_r($debug, True) . '</pre>';
-}
+  // Make and return the HTML.
+  $hide_title = init_bool($shortcode['hide_title']);
+  $item_ul = ebayResponseToHTML($ebay_response, $hide_title);  # The eBay items in a <ul> html list.
+  $css = "<style>$custom_css</style>";  # This plugins css.
 
+  return $css . $item_ul;
+}
