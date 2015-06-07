@@ -17,6 +17,7 @@ Provide code examples and explanations of how to get the project.
 ## S64-EPN Shortcode Parameters ##
 |Parameter|Type|Default|Description|
 |-|-|-|:-|
+|global_id|string|'EBAY-GB'|Specify an eBay website by it's global id. Defaults to ebay.co.uk.|
 |keywords|string|get_title()|We search eBay with these! Example "intel i5 cpu", 350 characters max|
 |count|int|3|The number of items to display, 100 max|
 |alignment|string|'horizontal'|horizontal, vertical or null. That's 1 item high, wide or no styling.|
