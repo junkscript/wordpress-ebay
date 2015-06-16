@@ -146,11 +146,11 @@ function ebayResponseToHTML($response, $hide_title){
     $link = $r['viewItemURL'][0];
     $img = $r['galleryURL'][0];
     $price = $r['sellingStatus'][0]['currentPrice'][0]['__value__'];
-    $li .= "<li><a href='$link'>$title <img src='$img' /> $price</a></li>";
+    $li .= "<div><div style='padding:20px; text-align:center;'><a href='$link'>$title <img style='margin:10px auto;' src='$img' /> <span style='font-size:1.2em; font-weight:bold; text-decoration:none;'>$price</span></a></div></div>";
   }
 
   # TODO: Should we check for errors and return Null or an empty str?
-  return $html = "<ul class='s64-ebay-slider'>$li</ul>";;
+  return $html = "<div class='s64-ebay-slider'>$li</div>";
 }
 
 

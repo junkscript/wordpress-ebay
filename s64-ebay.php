@@ -41,6 +41,28 @@ include_once( plugin_dir_path( __FILE__ ) . 'ebay/functions.php');
 add_action('admin_menu', 's64_ebay_setup_menu');
 add_action( 'admin_init', 'update_s64_ebay_affiliate_id' );
 
+if( wp_script_is( 'jquery' ) ) // CHECK IF JQUERY IS AVAIL
+{
+  add_action( 'wp_enqueue_scripts', 'add_slider_script' ); // LOAD UNSLIDER
+} 
+else // ENQUEUE JQUERY IF NOT 
+{
+  wp_enqueue_script( 'jquery' );
+  add_action( 'wp_enqueue_scripts', 'add_slider_script' ); // LOAD UNSLIDER
+}
+
+function add_slider_script() 
+{
+  wp_register_style('slider_style', plugins_url('css/slick.css', __FILE__));
+  wp_register_script('slider_script', plugins_url('js/slick.min.js', __FILE__), array('jquery'),'1.0', true);
+  wp_register_script('s64_script', plugins_url('js/s64-script.js', __FILE__), array('jquery'),'1.0', true);
+
+  wp_enqueue_style('slider_style');
+  wp_enqueue_script('slider_script');
+  wp_enqueue_script('s64_script');
+}
+
+
 /*************************************************************/
 /* PLUGIN SETTINGS PAGE */
 /*************************************************************/
@@ -51,7 +73,6 @@ function update_s64_ebay_affiliate_id()
   	register_setting( 's64-ebay-setting-1', 's64-ebay-affiliate-id' );
   	register_setting( 's64-ebay-setting-1', 's64-ebay-api-key' );
     register_setting( 's64-ebay-setting-1', 's64-ebay-custom-css' );
-
 }
  
 function s64_ebay_setup_menu()
@@ -159,6 +180,8 @@ function s64ebay_function($atts)
   $hide_title = init_bool($shortcode['hide_title']);
   $item_ul = ebayResponseToHTML($ebay_response, $hide_title);  # The eBay items in a <ul> html list.
   $css = "<style>$custom_css</style>";  # This plugins css.
+
+
 
   return $css . $item_ul;
 }
