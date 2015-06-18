@@ -40,16 +40,19 @@ include_once( plugin_dir_path( __FILE__ ) . 'ebay/functions.php');
 
 add_action('admin_menu', 's64_ebay_setup_menu');
 add_action( 'admin_init', 'update_s64_ebay_affiliate_id' );
+add_action( 'wp_enqueue_scripts', 'load_jquery' );
+add_action( 'wp_enqueue_scripts', 'add_slider_script' ); // LOAD UNSLIDER
 
-if( wp_script_is( 'jquery' ) ) // CHECK IF JQUERY IS AVAIL
-{
-  add_action( 'wp_enqueue_scripts', 'add_slider_script' ); // LOAD UNSLIDER
-} 
-else // ENQUEUE JQUERY IF NOT 
-{
-  wp_enqueue_script( 'jquery' );
-  add_action( 'wp_enqueue_scripts', 'add_slider_script' ); // LOAD UNSLIDER
+
+function load_jquery() {
+    if ( ! wp_script_is( 'jquery', 'enqueued' )) {
+
+        //Enqueue
+        wp_enqueue_script( 'jquery' );
+
+    }
 }
+
 
 function add_slider_script() 
 {
