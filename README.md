@@ -32,7 +32,9 @@ Provide code examples and explanations of how to get the project.
 |max_price|decimal|null|Ignore items more expensive than this price. Example 99.95 (no symbol)|
 |outlet_only|true or false|false|Only include items from eBay outlet sellers.|
 |sellers|comma separated values|null|Only items from these sellers. Example 'seller01,seller02,seller03'.|
-
+|top_rated|true or false|false|True for items where the seller qualifies as a top-rated seller.|
+|min_feedback|int|null|Returns items from sellers with a feedback score greater than this value. A value of 20 would exclude very new sellers.|
+|max_feedback|int|null|Returns items from sellers with a feedback score less than this value. A value of 150 would exclude the larger power sellers.|
 
 ## License
 

@@ -46,7 +46,7 @@ function findItemsAdvancedQuery($publisher_id, $api_key, $shortcode)
       $url .= "&itemFilter($filter).name=Condition";
       $url .= "&itemFilter($filter).value=Used";
       $filter += 1;
-    }# no else because it defaults to new and used..
+    }# no else because it defaults to new and used.
   }
 
   if(!is_null($shortcode['exclude_category'])){
@@ -95,9 +95,31 @@ function findItemsAdvancedQuery($publisher_id, $api_key, $shortcode)
     $filter += 1;
   }
 
+  // If set to true, returns only items listed by sellers at eBay's outlet stores, such as the Fashion Outlet.
   if (!is_null($shortcode['outlet_only'])) {
     $url .= "&itemFilter($filter).name=OutletSellerOnly";
     $url .= "&itemFilter($filter).value=true";
+    $filter += 1;
+  }
+
+  // The TopRatedSellerOnly item filter cannot be used together with either the Seller or ExcludeSeller item filters.
+  if (!is_null($shortcode['top_rated'])) {
+    if($shortcode['top_rated']!='false') {
+      $url .= "&itemFilter($filter).name=TopRatedSellerOnly";
+      $url .= "&itemFilter($filter).value=true";
+      $filter += 1;
+    }
+  }
+
+  if (!is_null($shortcode['max_feedback'])) {
+    $url .= "&itemFilter($filter).name=FeedbackScoreMax";
+    $url .= "&itemFilter($filter).value=" . $shortcode['max_feedback'];
+    $filter += 1;
+  }
+
+  if (!is_null($shortcode['min_feedback'])) {
+    $url .= "&itemFilter($filter).name=FeedbackScoreMin";
+    $url .= "&itemFilter($filter).value=" . $shortcode['min_feedback'];
     $filter += 1;
   }
 
