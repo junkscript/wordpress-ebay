@@ -166,7 +166,10 @@ function s64ebay_function($atts)
           'min_price' => Null,
           'max_price' => Null,
           'outlet_only' => Null,
-          'sellers' => Null
+          'sellers' => Null,
+          'min_feedback' => Null,          
+          'max_feedback' => Null,          
+          'top_rated' => Null,          
         ),
         $atts
       );
