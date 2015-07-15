@@ -167,7 +167,7 @@ function ebayResponseToHTML($response, $hide_title){
     $title = ($hide_title)?'':$r['title'][0];
     $link = $r['viewItemURL'][0];
     $img = $r['galleryURL'][0];
-    $price = $r['sellingStatus'][0]['currentPrice'][0]['__value__'];
+    $price = currency_symbol($r['sellingStatus'][0]['convertedCurrentPrice'][0]['@currencyId']) . $r['sellingStatus'][0]['convertedCurrentPrice'][0]['__value__'];
     $li .= "<div><div style='padding:20px; text-align:center;'><a href='$link'>$title <img style='margin:10px auto;' src='$img' /> <span style='font-size:1.2em; font-weight:bold; text-decoration:none;'>$price</span></a></div></div>";
   }
 
@@ -190,5 +190,32 @@ function init_bool($var){
     }
   }else{
     return False;
+  }
+}
+
+/**
+ * Takes an eBay currency id and returns a HTML entity code.
+ * http://developer.ebay.com/devzone/finding/callref/Enums/currencyIdList.html
+ * http://www.xe.com/symbols.php
+*/
+function currency_symbol($cureny_id){
+  if (in_array($currency_id, ['SGD','HKD','AUD','CAD','USD'])){
+    return "$";
+  }elseif ($currency_id == "CNY") {
+    return "&yen;"
+  }elseif ($currency_id == "EUR") {
+    return "&euro;";
+  }elseif ($currency_id == "GBP") {
+    return "&pound;";
+  }elseif ($currency_id == "INR") {
+    return "&#8377;";
+  }elseif ($currency_id == "MYR") {
+    return "RM";
+  }elseif ($currency_id == "PHP") {
+    return "&#8369;";
+  }elseif ($currency_id == "PLN") {
+    return "&#122;&#322;";
+  }else{
+    return "";
   }
 }
