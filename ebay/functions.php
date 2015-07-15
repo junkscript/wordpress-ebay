@@ -198,11 +198,11 @@ function init_bool($var){
  * http://developer.ebay.com/devzone/finding/callref/Enums/currencyIdList.html
  * http://www.xe.com/symbols.php
 */
-function currency_symbol($cureny_id){
+function currency_symbol($currency_id){
   if (in_array($currency_id, ['SGD','HKD','AUD','CAD','USD'])){
     return "$";
   }elseif ($currency_id == "CNY") {
-    return "&yen;"
+    return "&yen;";
   }elseif ($currency_id == "EUR") {
     return "&euro;";
   }elseif ($currency_id == "GBP") {
