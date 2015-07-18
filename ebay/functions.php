@@ -79,7 +79,7 @@ function findItemsAdvancedQuery($publisher_id, $api_key, $shortcode)
 
   if (!is_null($shortcode['fixed_price'])) {
     $url .= "&itemFilter($filter).name=ListingType";
-    $url .= "&itemFilter($filter).value=true";
+    $url .= "&itemFilter($filter).value=FixedPrice";
     $filter += 1;
   }
 
