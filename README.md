@@ -27,6 +27,7 @@ We wanted a simple solution which **anyone** can use. The shortcode is straight 
 1. Click "Upload Plugin" and choose the .zip file you just downloaded.
 1. Then once it's uploaded just click the "Activate" link.
 1. Create a new post, paste in this shortcode and finally preview the post:
+
     [s64-ebay keywords="lego" count=12]
 
 You should see Lego for sale on eBay!
