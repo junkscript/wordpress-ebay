@@ -54,6 +54,10 @@ You should see Lego for sale on eBay!
 |16|min_feedback|int|null|Returns items from sellers with a feedback score greater than this value. A value of 50 would exclude very new sellers.|
 |17|max_feedback|int|null|Returns items from sellers with a feedback score less than this value. A value of 150 would exclude the larger power sellers.|
 
+## Screen grabs
+![argos laptops](http://i.imgur.com/v9gSYli.png)
+![lego espana](http://i.imgur.com/cWwxnja.png)
+
 ## License
 
 This program is free software: you can redistribute it and/or modify
