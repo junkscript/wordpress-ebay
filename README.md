@@ -5,7 +5,7 @@ This is a free WordPress plugin which makes it easy to display eBay listings on 
 
 If you include our very simple shortcode in a blog post then the user will see a *widget* showing eBay listings.
 
-Specify your eBay Partner Network publisher id on the plugin configuration page and all eBay links become roverised. You earn a commission on any sales from traffic you refer to eBay.
+Specify your eBay Partner Network **campaign id** (10 digit number) on the plugin configuration page and all eBay links become roverised. You earn a commission on any sales from traffic you refer to eBay.
 
 ## Demo website
 http://wpepn.super64.net/
